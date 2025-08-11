@@ -1,370 +1,483 @@
 "use client";
 
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2,
   Music,
   Mic2,
   Headphones,
   ArrowRight,
-  Sparkles,
-  Users,
-  TrendingUp,
+  HelpCircle,
+  LogOut,
+  User,
+  Menu,
+  X,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
   const isLoggedIn = !!session;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-950 font-sans text-gray-100 antialiased relative overflow-hidden">
-      {/* Enhanced Background with animated elements */}
-      <div className="fixed inset-0 bg-gradient-to-br from-emerald-500/10 via-purple-500/10 to-transparent backdrop-blur-sm"></div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-purple-800 antialiased">
+      {/* Integrated Navbar */}
+      <header className="relative z-50 border-b border-white/10">
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/60 via-purple-900/60 to-purple-800/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-purple-500/10 to-pink-500/5"></div>
 
-      {/* Animated background orbs */}
-      <motion.div
-        className="fixed top-20 right-20 w-64 h-64 bg-gradient-to-br from-purple-500/20 to-emerald-500/20 rounded-full blur-3xl"
-        animate={{
-          x: [0, 50, -30, 0],
-          y: [0, -30, 50, 0],
-          scale: [1, 1.2, 0.8, 1],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="fixed bottom-20 left-20 w-48 h-48 bg-gradient-to-br from-emerald-500/20 to-purple-500/20 rounded-full blur-2xl"
-        animate={{
-          x: [0, -40, 60, 0],
-          y: [0, 40, -20, 0],
-          scale: [1, 0.8, 1.3, 1],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          delay: 5,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="fixed top-1/2 left-1/2 w-32 h-32 bg-gradient-to-br from-pink-500/15 to-violet-500/15 rounded-full blur-xl"
-        animate={{
-          x: [-50, 50, -25, 25, 0],
-          y: [25, -50, 50, -25, 0],
-          scale: [1, 1.4, 0.6, 1.1, 1],
-        }}
-        transition={{
-          duration: 22,
-          repeat: Infinity,
-          delay: 10,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Grid pattern overlay */}
-      <div
-        className="fixed inset-0 opacity-5"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-          backgroundSize: "50px 50px",
-        }}
-      ></div>
-
-      {/* Main content container */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-16 flex flex-col items-center text-center space-y-16">
-        {!isLoggedIn ? (
-          <>
-            {/* Enhanced Logo & Title */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              className="space-y-8"
+        <nav className="relative max-w-7xl mx-auto px-8 py-6">
+          <div className="flex justify-between items-center">
+            {/* Enhanced Logo */}
+            <Link
+              href="/"
+              className="group flex items-center gap-4 text-2xl font-black hover:scale-105 transition-all duration-300"
             >
-              <div className="relative">
+              <motion.div
+                className="relative w-12 h-12 bg-gradient-to-br from-emerald-400 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-purple-500/30"
+                whileHover={{
+                  rotate: [0, -10, 10, 0],
+                  scale: 1.1,
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                <Music className="w-6 h-6 text-white drop-shadow-lg" />
                 <motion.div
-                  className="mx-auto w-32 h-32 bg-gradient-to-br from-emerald-400 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden"
-                  animate={{
-                    boxShadow: [
-                      "0 0 50px rgba(168, 85, 247, 0.5)",
-                      "0 0 80px rgba(16, 185, 129, 0.5)",
-                      "0 0 50px rgba(236, 72, 153, 0.5)",
-                      "0 0 50px rgba(168, 85, 247, 0.5)",
-                    ],
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-2xl transform -skew-x-12"
+                  animate={{ x: [-50, 50] }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
                   }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                >
-                  <Music className="w-16 h-16 text-white relative z-10" />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12"
-                    animate={{ x: [-150, 150] }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                </motion.div>
+                />
+              </motion.div>
+              <span className="text-3xl bg-gradient-to-r from-emerald-400 via-purple-300 to-pink-400 bg-clip-text text-transparent group-hover:from-emerald-300 group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-300 drop-shadow-sm">
+                MoodPlay
+              </span>
+            </Link>
 
-                {/* Floating elements around logo */}
-                <motion.div
-                  className="absolute -top-4 -right-4 w-8 h-8 bg-emerald-400 rounded-full"
-                  animate={{ y: [-5, 5, -5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+            {/* Desktop Navigation with improved spacing */}
+            <div className="hidden md:flex items-center flex-1 justify-end">
+              {/* Navigation Links - Centered section */}
+              <div className="flex items-center gap-8 mr-auto ml-auto">
+                <NavLink
+                  href="/generate-from-prompt"
+                  text="Prompt Your Vibe"
+                  icon={Mic2}
+                  description="AI Prompt Generation"
+                  gradient="from-purple-500 to-pink-500"
                 />
-                <motion.div
-                  className="absolute -bottom-2 -left-6 w-6 h-6 bg-purple-400 rounded-full"
-                  animate={{ y: [5, -5, 5] }}
-                  transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
-                />
-                <motion.div
-                  className="absolute top-1/2 -right-8 w-4 h-4 bg-pink-400 rounded-full"
-                  animate={{ y: [-3, 3, -3] }}
-                  transition={{ duration: 1.8, repeat: Infinity, delay: 1 }}
+
+                <NavLink
+                  href="/wizard"
+                  text="Mood Quiz"
+                  icon={HelpCircle}
+                  description="Interactive Questions"
+                  gradient="from-cyan-500 to-blue-500"
                 />
               </div>
 
-              <div className="space-y-6">
-                <h1 className="text-6xl sm:text-8xl font-black bg-gradient-to-r from-emerald-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
-                  MoodPlay
-                </h1>
-                <div className="space-y-3">
-                  <motion.p
-                    className="text-2xl sm:text-3xl text-purple-300 font-semibold"
-                    animate={{ opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  ></motion.p>
-                  <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                    Discover playlists that relay your emotions, crafted by
-                    someone who understands...
+              {/* User Section - Right aligned with proper spacing */}
+              <div className="flex items-center gap-6">
+                {session ? (
+                  <>
+                    {/* Enhanced User Avatar */}
+                    <motion.div
+                      className="flex items-center gap-4 px-6 py-3 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-2xl hover:from-white/20 hover:to-white/10 hover:border-white/30 transition-all duration-300 shadow-lg"
+                      whileHover={{ scale: 1.03, y: -2 }}
+                    >
+                      <div className="relative w-10 h-10 bg-gradient-to-br from-emerald-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                        {session.user?.image ? (
+                          <img
+                            src={session.user.image}
+                            alt="Profile"
+                            className="w-10 h-10 rounded-full border-2 border-white/20"
+                          />
+                        ) : (
+                          <User className="w-5 h-5 text-white" />
+                        )}
+                      </div>
+                      <span className="text-white font-semibold">
+                        {session.user?.name?.split(" ")[0] || "User"}
+                      </span>
+                    </motion.div>
+
+                    {/* Enhanced Sign Out Button */}
+                    <motion.button
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="group relative overflow-hidden bg-gradient-to-r from-gray-800/40 to-gray-700/40 hover:from-red-500/20 hover:to-pink-500/20 text-gray-300 hover:text-red-300 border border-gray-600/30 hover:border-red-400/50 px-6 py-3 rounded-2xl transition-all duration-300 shadow-lg font-medium hover:shadow-red-500/10 backdrop-blur-sm"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {/* Subtle glow effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 to-pink-500/0 group-hover:from-red-500/10 group-hover:to-pink-500/10 transition-all duration-300 rounded-2xl"></div>
+
+                      <span className="relative z-10 flex items-center gap-2">
+                        <LogOut className="w-4 h-4 group-hover:rotate-12 transition-all duration-300" />
+                        <span className="tracking-wide">Sign Out</span>
+                      </span>
+                    </motion.button>
+                  </>
+                ) : (
+                  <div className="px-6 py-3 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-2xl text-white/80 font-medium shadow-lg">
+                    Not signed in
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              className="md:hidden relative w-12 h-12 bg-gradient-to-br from-white/20 to-white/10 border border-white/30 rounded-2xl flex items-center justify-center hover:from-white/30 hover:to-white/20 transition-all duration-300 shadow-lg"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-6 h-6 text-white" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu className="w-6 h-6 text-white" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </div>
+
+          {/* Mobile Navigation */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -20 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="md:hidden mt-6 overflow-hidden"
+              >
+                <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 space-y-6 shadow-2xl">
+                  <MobileNavLink
+                    href="/generate-from-prompt"
+                    text="Prompt Your Vibe"
+                    icon={Mic2}
+                    description="AI Prompt Generation"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+                  <MobileNavLink
+                    href="/wizard"
+                    text="Mood Quiz"
+                    icon={HelpCircle}
+                    description="Interactive Questions"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+
+                  {session ? (
+                    <div className="pt-4 border-t border-white/20 space-y-4">
+                      <div className="flex items-center gap-4 px-4 py-3 bg-gradient-to-r from-white/10 to-white/5 rounded-2xl">
+                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                          {session.user?.image ? (
+                            <img
+                              src={session.user.image}
+                              alt="Profile"
+                              className="w-10 h-10 rounded-full border-2 border-white/20"
+                            />
+                          ) : (
+                            <User className="w-5 h-5 text-white" />
+                          )}
+                        </div>
+                        <span className="text-white font-semibold">
+                          {session.user?.name || "User"}
+                        </span>
+                      </div>
+                      <motion.button
+                        onClick={() => {
+                          signOut({ callbackUrl: "/" });
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-4 bg-gradient-to-r from-red-500/20 to-pink-500/20 hover:from-red-500/30 hover:to-pink-500/30 text-red-300 hover:text-white border border-red-500/30 rounded-2xl transition-all duration-200 font-semibold"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span>Sign Out</span>
+                      </motion.button>
+                    </div>
+                  ) : (
+                    <div className="pt-4 border-t border-white/20">
+                      <div className="px-4 py-3 bg-gradient-to-r from-white/10 to-white/5 rounded-2xl text-white/80 font-medium">
+                        Not signed in
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex items-center justify-center min-h-[calc(100vh-100px)]">
+        {/* Floating music notes */}
+        <div className="fixed top-24 right-16 w-10 h-10 text-white/15 animate-pulse">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed bottom-20 left-16 w-8 h-8 text-white/15">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed top-1/4 left-24 w-6 h-6 text-white/10 animate-pulse">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed top-3/4 right-32 w-7 h-7 text-white/12">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed bottom-1/3 right-20 w-5 h-5 text-white/8 animate-pulse">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed top-1/2 left-12 w-9 h-9 text-white/10">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed bottom-32 right-1/4 w-6 h-6 text-white/12 animate-pulse">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="fixed top-48 left-1/3 w-4 h-4 text-white/8">
+          <Music className="w-full h-full" />
+        </div>
+
+        <div className="w-full max-w-4xl mx-auto px-6 text-center">
+          {!isLoggedIn ? (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-12"
+            >
+              {/* Center Logo */}
+              <div className="w-40 h-40 mx-auto bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/20">
+                <Music className="w-20 h-20 text-white" />
+              </div>
+
+              {/* Hero Text */}
+              <div className="space-y-8 pt-8">
+                <h1 className="text-7xl md:text-8xl lg:text-9xl font-black text-white leading-none"></h1>
+                <p className="text-2xl md:text-3xl text-gray-300 leading-relaxed max-w-4xl mx-auto font-light">
+                  Discover playlists that relay your emotions
+                </p>
+              </div>
+
+              {/* Sign In Button */}
+              <div className="pt-24">
+                {isLoading ? (
+                  <div className="inline-flex items-center gap-5 px-16 py-8 bg-green-600 rounded-3xl text-2xl font-bold">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                    <span></span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => signIn("spotify")}
+                    className="inline-flex items-center gap-5 px-16 py-8 bg-green-500 hover:bg-green-600 rounded-3xl font-bold text-2xl transition-all duration-200 shadow-2xl hover:shadow-green-500/25 hover:scale-105"
+                  >
+                    <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                        <div className="absolute w-2 h-2 bg-black rounded-full"></div>
+                      </div>
+                    </div>
+                    Sign in with Spotify
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-24"
+            >
+              {/* Welcome */}
+              <div className="space-y-12">
+                <div className="w-40 h-40 mx-auto bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-full flex items-center justify-center shadow-2xl shadow-emerald-500/20">
+                  <Headphones className="w-20 h-20 text-white" />
+                </div>
+
+                <div className="space-y-8">
+                  <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight drop-shadow-sm">
+                    Welcome back,
+                    <br />
+                    <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
+                      {session?.user?.name?.split(" ")[0] || "User"}!
+                    </span>
+                  </h1>
+                  <p className="text-2xl md:text-3xl text-gray-200 font-medium leading-relaxed max-w-3xl mx-auto drop-shadow-sm">
+                    How would you like to create your playlist today?
                   </p>
                 </div>
               </div>
-            </motion.div>
 
-            {/* Enhanced Stats with better visual hierarchy */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-4xl">
-              {[
-                {
-                  icon: Music,
-                  value: "40M+",
-                  label: "Songs",
-                  color: "from-emerald-500 to-teal-500",
-                },
-                {
-                  icon: Users,
-                  value: "800K+",
-                  label: "Playlists",
-                  color: "from-purple-500 to-violet-500",
-                },
-                {
-                  icon: TrendingUp,
-                  value: "95%",
-                  label: "Match Rate",
-                  color: "from-pink-500 to-rose-500",
-                },
-              ].map(({ icon: Icon, value, label, color }, index) => (
-                <motion.div
-                  key={label}
-                  className="group relative"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 * index, duration: 0.6 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                >
-                  {/* Glowing background */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${color} rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300`}
-                  ></div>
-
-                  {/* Card content */}
-                  <div className="relative bg-white/10 border border-white/20 backdrop-blur-lg rounded-2xl p-8 shadow-xl hover:border-white/40 hover:shadow-2xl transition-all duration-300">
-                    <Icon className="w-12 h-12 text-white mb-4 mx-auto group-hover:scale-110 transition-transform duration-300" />
-                    <p className="text-4xl sm:text-5xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
-                      {value}
-                    </p>
-                    <p className="text-sm text-gray-300 uppercase tracking-wider font-medium">
-                      {label}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Enhanced Sign In Section */}
-            <div className="flex flex-col items-center space-y-8">
-              {isLoading ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex items-center gap-4 p-6 bg-white/10 border border-white/20 backdrop-blur-lg rounded-2xl shadow-xl"
-                >
-                  <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
-                  <span className="text-lg text-gray-300 font-medium">
-                    Connecting...
-                  </span>
-                </motion.div>
-              ) : (
-                <div className="space-y-6">
-                  <motion.button
-                    onClick={() => signIn("spotify")}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileHover={{
-                      scale: 1.05,
-                      boxShadow: "0 0 30px rgba(16, 185, 129, 0.5)",
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.4 }}
-                    className="group relative overflow-hidden bg-gradient-to-r from-emerald-500 to-purple-600 hover:from-emerald-400 hover:to-purple-500 px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl shadow-purple-500/30"
+              {/* Options */}
+              <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto pt-8">
+                <Link href="/generate-from-prompt">
+                  <motion.div
+                    className="group relative overflow-hidden bg-gradient-to-br from-white/8 to-white/4 backdrop-blur-xl border border-white/20 hover:border-purple-400/60 rounded-3xl p-16 transition-all duration-500 hover:bg-gradient-to-br hover:from-purple-500/10 hover:to-pink-500/10 shadow-2xl hover:shadow-purple-500/20"
+                    whileHover={{ scale: 1.03, y: -8 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <span className="relative z-10 flex items-center gap-4">
-                      <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-                      Sign in with Spotify
-                      <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                    {/* Animated shine effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12"
-                      animate={{ x: [-300, 300] }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </motion.button>
+                    {/* Background glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                  <div className="flex items-center gap-6 text-sm text-gray-400">
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                      Free Forever
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                      No Credit Card
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                      Instant Access
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Enhanced Welcome Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              className="space-y-8"
-            >
-              <div className="relative">
-                <motion.div
-                  className="mx-auto w-24 h-24 bg-gradient-to-br from-emerald-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl"
-                  animate={{ rotate: [0, 360] }}
-                  transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                >
-                  <Headphones className="w-12 h-12 text-white" />
-                </motion.div>
-                <motion.div
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-400 rounded-full"
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </div>
+                    <div className="relative z-10 space-y-8">
+                      <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-purple-500/25">
+                        <Mic2 className="w-10 h-10 text-white drop-shadow-sm" />
+                      </div>
 
-              <div className="space-y-4">
-                <h1 className="text-4xl sm:text-6xl font-bold bg-gradient-to-r from-emerald-400 to-purple-400 bg-clip-text text-transparent">
-                  Welcome, {session?.user?.name?.split(" ")[0] || "User"}!
-                </h1>
-                <p className="text-xl sm:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                  Your personalized music journey starts here. Choose your path.
-                </p>
-              </div>
-            </motion.div>
+                      <div className="text-center space-y-6">
+                        <h3 className="text-4xl font-black text-white tracking-tight drop-shadow-sm">
+                          Prompt Your Vibe
+                        </h3>
+                        <p className="text-gray-200 text-xl leading-relaxed font-medium drop-shadow-sm">
+                          Describe your mood
+                        </p>
+                      </div>
 
-            {/* Enhanced Feature Options */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
-              {[
-                {
-                  icon: Mic2,
-                  title: "Voice Your Vibe",
-                  description:
-                    "Speak your mood or write a prompt for a custom playlist.",
-                  href: "/generate-from-prompt",
-                  gradient: "from-emerald-500 to-teal-500",
-                },
-                {
-                  icon: Headphones,
-                  title: "Mood Quiz",
-                  description: "Answer questions for a tailored mix.",
-                  href: "/wizard",
-                  gradient: "from-purple-500 to-pink-500",
-                },
-              ].map((option, index) => (
-                <motion.div
-                  key={option.title}
-                  whileHover={{ scale: 1.03, y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="group relative"
-                >
-                  {/* Glowing background */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${option.gradient} rounded-3xl blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`}
-                  ></div>
-
-                  {/* Card */}
-                  <Link href={option.href} className="block">
-                    <div className="relative bg-white/10 border border-white/20 backdrop-blur-lg p-8 rounded-3xl shadow-xl hover:border-white/40 hover:shadow-2xl transition-all duration-300 h-full">
-                      <div className="space-y-6 text-center">
-                        <div
-                          className={`w-16 h-16 bg-gradient-to-br ${option.gradient} rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300`}
-                        >
-                          <option.icon className="w-8 h-8 text-white" />
-                        </div>
-
-                        <div className="space-y-3">
-                          <h3 className="text-2xl font-bold text-white group-hover:text-emerald-300 transition-colors">
-                            {option.title}
-                          </h3>
-                          <p className="text-gray-300 leading-relaxed">
-                            {option.description}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center justify-center gap-3 text-emerald-400 font-semibold group-hover:gap-4 transition-all duration-300">
-                          <span>
-                            {option.title === "Voice Your Vibe"
-                              ? "Explore"
-                              : "Start"}
-                          </span>
-                          <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                        </div>
+                      <div className="flex items-center justify-center text-purple-300 font-bold text-xl pt-6">
+                        <span className="drop-shadow-sm">Go</span>
+                        <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-3 transition-transform duration-300" />
                       </div>
                     </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </main>
+                  </motion.div>
+                </Link>
+
+                <Link href="/wizard">
+                  <motion.div
+                    className="group relative overflow-hidden bg-gradient-to-br from-white/8 to-white/4 backdrop-blur-xl border border-white/20 hover:border-cyan-400/60 rounded-3xl p-16 transition-all duration-500 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-blue-500/10 shadow-2xl hover:shadow-cyan-500/20"
+                    whileHover={{ scale: 1.03, y: -8 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    {/* Background glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <div className="relative z-10 space-y-8">
+                      <div className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-cyan-500/25">
+                        <HelpCircle className="w-10 h-10 text-white drop-shadow-sm" />
+                      </div>
+
+                      <div className="text-center space-y-6">
+                        <h3 className="text-4xl font-black text-white tracking-tight drop-shadow-sm">
+                          Mood Quiz
+                        </h3>
+                        <p className="text-gray-200 text-xl leading-relaxed font-medium drop-shadow-sm">
+                          Answer interactive questions
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-center text-cyan-300 font-bold text-xl pt-6">
+                        <span className="drop-shadow-sm">Go</span>
+                        <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-3 transition-transform duration-300" />
+                      </div>
+                    </div>
+                  </motion.div>
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function NavLink({
+  href,
+  text,
+  icon: Icon,
+  description,
+  gradient,
+}: {
+  href: string;
+  text: string;
+  icon: any;
+  description: string;
+  gradient: string;
+}) {
+  return (
+    <Link href={href} className="group relative">
+      <motion.div
+        className="flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-2xl hover:from-white/20 hover:to-white/10 hover:border-white/30 transition-all duration-300 shadow-lg"
+        whileHover={{ scale: 1.03, y: -3 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <div
+          className={`w-10 h-10 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center shadow-lg`}
+        >
+          <Icon className="w-5 h-5 text-white drop-shadow-sm" />
+        </div>
+        <div className="hidden lg:block">
+          <div className="text-sm font-bold text-white transition-colors drop-shadow-sm">
+            {text}
+          </div>
+          <div className="text-xs text-gray-300 transition-colors">
+            {description}
+          </div>
+        </div>
+        <div className="lg:hidden text-sm font-bold text-white transition-colors">
+          {text}
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
+function MobileNavLink({
+  href,
+  text,
+  icon: Icon,
+  description,
+  onClick,
+}: {
+  href: string;
+  text: string;
+  icon: any;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <Link href={href} onClick={onClick}>
+      <motion.div
+        className="flex items-center gap-4 px-4 py-4 hover:bg-gradient-to-r hover:from-white/15 hover:to-white/10 rounded-2xl transition-all duration-200 border border-transparent hover:border-white/20"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-white">{text}</div>
+          <div className="text-xs text-gray-300">{description}</div>
+        </div>
+      </motion.div>
+    </Link>
   );
 }

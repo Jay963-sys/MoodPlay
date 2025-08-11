@@ -15,6 +15,9 @@ import {
   Heart,
   Coffee,
   Sun,
+  Wand2,
+  MessageCircle,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import PlaylistPreview from "@/components/PlaylistPreview";
@@ -91,6 +94,7 @@ export default function PromptPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isFocused, setIsFocused] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -222,11 +226,18 @@ export default function PromptPage() {
     }
   };
 
+  const clearPrompt = () => {
+    setPrompt("");
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
+
   const loadingSteps = [
-    { step: 1, text: "Analyzing your vibe..." },
-    { step: 2, text: "Finding perfect matches..." },
-    { step: 3, text: "Curating your playlist..." },
-    { step: 4, text: "Adding final touches..." },
+    { step: 1, text: "Analyzing your vibe...", icon: Sparkles },
+    { step: 2, text: "Finding perfect matches...", icon: Music },
+    { step: 3, text: "Curating your playlist...", icon: Wand2 },
+    { step: 4, text: "Adding final touches...", icon: Heart },
   ];
 
   return (
@@ -288,43 +299,43 @@ export default function PromptPage() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="fixed top-6 left-6"
+          className="fixed top-6 left-6 z-50"
         >
           <Link href="/">
             <motion.div
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all text-white shadow-lg"
+              className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 transition-all text-white shadow-lg font-medium"
               whileHover={{ scale: 1.05, x: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to Home</span>
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Home</span>
             </motion.div>
           </Link>
         </motion.div>
 
-        <div className="w-full max-w-4xl space-y-8">
+        <div className="w-full max-w-5xl space-y-12">
           {/* Enhanced Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center space-y-6"
+            className="text-center space-y-8"
           >
             <motion.div
-              className="mx-auto w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center relative overflow-hidden"
+              className="mx-auto w-24 h-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center relative overflow-hidden shadow-2xl"
               animate={{
                 boxShadow: [
-                  "0 0 50px rgba(168, 85, 247, 0.3)",
-                  "0 0 80px rgba(236, 72, 153, 0.3)",
-                  "0 0 50px rgba(168, 85, 247, 0.3)",
+                  "0 0 60px rgba(168, 85, 247, 0.4)",
+                  "0 0 100px rgba(236, 72, 153, 0.4)",
+                  "0 0 60px rgba(168, 85, 247, 0.4)",
                 ],
               }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              <Sparkles className="w-10 h-10 text-white relative z-10" />
+              <Sparkles className="w-12 h-12 text-white relative z-10" />
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12"
-                animate={{ x: [-80, 80] }}
+                animate={{ x: [-100, 100] }}
                 transition={{
                   duration: 3,
                   repeat: Infinity,
@@ -332,9 +343,14 @@ export default function PromptPage() {
                 }}
               />
             </motion.div>
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-pink-200"></h1>
-              <p className="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed"></p>
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-pink-200 leading-tight drop-shadow-sm">
+                Prompt Your Vibe
+              </h1>
+              <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed font-medium">
+                Describe your perfect moment and let the app craft the
+                soundtrack to match your mood
+              </p>
             </div>
           </motion.div>
 
@@ -343,26 +359,31 @@ export default function PromptPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
           >
             {moodCards.map((mood, index) => (
               <motion.button
                 key={mood.label}
                 onClick={() => handleMoodCardClick(mood.prompt)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
                 whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 transition-all"
+                className="group relative p-6 rounded-2xl bg-white/8 backdrop-blur-xl border border-white/20 hover:border-white/40 transition-all duration-300 shadow-lg"
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${mood.color} rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity`}
+                  className={`absolute inset-0 bg-gradient-to-br ${mood.color} rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-all duration-300`}
                 />
-                <div className="relative space-y-2">
+                <div className="relative space-y-3">
                   <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${mood.color} flex items-center justify-center mx-auto`}
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${mood.color} flex items-center justify-center mx-auto shadow-lg`}
                   >
-                    <mood.icon className="w-5 h-5 text-white" />
+                    <mood.icon className="w-6 h-6 text-white drop-shadow-sm" />
                   </div>
-                  <p className="text-white text-sm font-medium">{mood.label}</p>
+                  <p className="text-white font-semibold text-sm">
+                    {mood.label}
+                  </p>
                 </div>
               </motion.button>
             ))}
@@ -373,63 +394,135 @@ export default function PromptPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
+            className="relative max-w-4xl mx-auto"
           >
-            <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-8 shadow-2xl">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+            <div
+              className={`relative bg-gradient-to-br from-white/12 to-white/8 backdrop-blur-xl rounded-3xl border transition-all duration-300 shadow-2xl ${
+                isFocused
+                  ? "border-purple-400/60 shadow-purple-500/20"
+                  : "border-white/20"
+              }`}
+            >
+              {/* Glowing border effect on focus */}
+              <div
+                className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 blur-xl transition-opacity duration-300 ${
+                  isFocused ? "opacity-100" : "opacity-0"
+                }`}
+              />
 
-              <div className="relative space-y-6">
+              <div className="relative p-8 space-y-6">
+                {/* Input header */}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-white/90 font-semibold">
+                    Describe Your Vibe
+                  </span>
+                </div>
+
                 <div className="relative">
                   <textarea
                     ref={textareaRef}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="'   'Paint a picture with words... 'Birthday party mix' or 'Chill vibes for studying late at night'"
-                    className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-white/50 resize-none min-h-[120px] max-h-[200px] leading-relaxed"
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholder=""
+                    className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-white/40 resize-none min-h-[140px] max-h-[300px] leading-relaxed font-medium"
                     disabled={loading}
-                    maxLength={100}
+                    maxLength={500}
                   />
 
-                  {/* Voice Input Button */}
-                  <motion.button
-                    onClick={handleVoiceInput}
-                    disabled={loading}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`absolute top-4 right-4 p-3 rounded-full transition-all ${
-                      isRecording
-                        ? "bg-red-500 hover:bg-red-400"
-                        : "bg-white/10 hover:bg-white/20"
-                    } backdrop-blur-sm border border-white/20`}
-                  >
-                    {isRecording ? (
-                      <MicOff className="w-5 h-5 text-white" />
-                    ) : (
-                      <Mic className="w-5 h-5 text-white" />
+                  {/* Enhanced control buttons */}
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    {prompt.length > 0 && (
+                      <motion.button
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        onClick={clearPrompt}
+                        disabled={loading}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/30 transition-all"
+                      >
+                        <X className="w-4 h-4 text-white/70" />
+                      </motion.button>
                     )}
-                  </motion.button>
+
+                    {/* Voice Input Button */}
+                    <motion.button
+                      onClick={handleVoiceInput}
+                      disabled={loading}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className={`p-3 rounded-full transition-all duration-300 backdrop-blur-sm border ${
+                        isRecording
+                          ? "bg-red-500/20 hover:bg-red-500/30 border-red-400/50 text-red-300"
+                          : "bg-white/10 hover:bg-white/20 border-white/20 hover:border-white/30 text-white/70"
+                      }`}
+                    >
+                      {isRecording ? (
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 1, repeat: Infinity }}
+                        >
+                          <MicOff className="w-5 h-5" />
+                        </motion.div>
+                      ) : (
+                        <Mic className="w-5 h-5" />
+                      )}
+                    </motion.button>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="text-white/40 text-sm">
-                      {prompt.length}/500
-                    </div>
-                    {isRecording && (
-                      <div className="flex items-center gap-2 text-red-400 text-sm">
-                        <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-                        Listening...
+                {/* Enhanced bottom section */}
+                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`text-sm font-medium ${
+                          prompt.length > 450
+                            ? "text-amber-400"
+                            : prompt.length > 400
+                            ? "text-yellow-400"
+                            : "text-white/40"
+                        }`}
+                      >
+                        {prompt.length}/500
                       </div>
+                      {prompt.length > 450 && (
+                        <span className="text-xs text-amber-400">
+                          Almost there!
+                        </span>
+                      )}
+                    </div>
+
+                    {isRecording && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 text-red-400 text-sm font-medium"
+                      >
+                        <motion.div
+                          className="w-2 h-2 bg-red-400 rounded-full"
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                        Listening...
+                      </motion.div>
                     )}
                   </div>
 
                   <motion.button
                     onClick={generatePlaylistFromPrompt}
                     disabled={loading || !prompt.trim()}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold shadow-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
+                    whileHover={
+                      !loading && prompt.trim() ? { scale: 1.05, y: -2 } : {}
+                    }
+                    whileTap={!loading && prompt.trim() ? { scale: 0.95 } : {}}
+                    className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold shadow-2xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-3">
                       {loading ? (
@@ -444,7 +537,7 @@ export default function PromptPage() {
                         </>
                       )}
                     </span>
-                    {!loading && (
+                    {!loading && prompt.trim() && (
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
                         animate={{ x: [-300, 300] }}
@@ -469,12 +562,16 @@ export default function PromptPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="space-y-6"
+                className="space-y-8 max-w-4xl mx-auto"
               >
-                <div className="text-center">
-                  <h3 className="text-white/90 text-lg font-semibold mb-2">
+                <div className="text-center space-y-3">
+                  <h3 className="text-white font-bold text-xl">
                     Need inspiration? Try these vibes:
                   </h3>
+                  <p className="text-white/60 text-sm">
+                    Click any suggestion to get started, or create your own
+                    unique prompt
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {promptSuggestions.map((suggestion, index) => (
@@ -486,16 +583,18 @@ export default function PromptPage() {
                       transition={{ delay: 0.1 * index }}
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="group relative p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all backdrop-blur-sm"
+                      className="group relative p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-sm shadow-lg"
                     >
                       <div
-                        className={`absolute inset-0 bg-gradient-to-br ${suggestion.color} rounded-2xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity`}
+                        className={`absolute inset-0 bg-gradient-to-br ${suggestion.color} rounded-2xl blur-2xl opacity-0 group-hover:opacity-20 transition-all duration-300`}
                       />
                       <div className="relative flex items-center gap-4">
-                        <span className="text-2xl">{suggestion.emoji}</span>
-                        <span className="text-white/80 group-hover:text-white text-left font-medium">
-                          {suggestion.text}
-                        </span>
+                        <span className="text-3xl">{suggestion.emoji}</span>
+                        <div className="text-left">
+                          <span className="text-white/80 group-hover:text-white font-medium leading-relaxed">
+                            {suggestion.text}
+                          </span>
+                        </div>
                       </div>
                     </motion.button>
                   ))}
@@ -508,16 +607,21 @@ export default function PromptPage() {
           <AnimatePresence>
             {error && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="p-6 rounded-2xl bg-red-500/20 border border-red-500/30 backdrop-blur-xl shadow-xl"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                className="max-w-2xl mx-auto p-6 rounded-2xl bg-red-500/10 border border-red-500/30 backdrop-blur-xl shadow-xl"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-red-400 text-xl">⚠️</span>
                   </div>
-                  <p className="text-red-200">{error}</p>
+                  <div className="space-y-2">
+                    <h4 className="text-red-200 font-semibold">
+                      Oops! Something went wrong
+                    </h4>
+                    <p className="text-red-200/80 text-sm">{error}</p>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -530,28 +634,33 @@ export default function PromptPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="text-center py-16 space-y-8"
+                className="text-center py-20 space-y-12 max-w-2xl mx-auto"
               >
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="mx-auto w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-2xl"
+                  className="mx-auto w-24 h-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-purple-500/30"
                 >
-                  <Music className="w-10 h-10 text-white" />
+                  <Music className="w-12 h-12 text-white" />
                 </motion.div>
 
-                <div className="space-y-4">
-                  <h3 className="text-white text-2xl font-bold">
-                    Crafting Your Perfect Playlist
-                  </h3>
-
+                <div className="space-y-6">
                   <div className="space-y-3">
+                    <h3 className="text-white text-3xl font-black">
+                      Crafting Your Perfect Playlist
+                    </h3>
+                    <p className="text-white/70 text-lg">
+                      Our AI is carefully selecting tracks that match your vibe
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
                     {loadingSteps.map((step, index) => (
                       <motion.div
                         key={step.step}
-                        className={`flex items-center justify-center gap-3 transition-all ${
+                        className={`flex items-center justify-center gap-4 p-4 rounded-2xl transition-all duration-300 ${
                           currentStep >= step.step
-                            ? "text-white"
+                            ? "text-white bg-white/10 backdrop-blur-sm border border-white/20"
                             : "text-white/40"
                         }`}
                         animate={{
@@ -560,23 +669,42 @@ export default function PromptPage() {
                         }}
                       >
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                             currentStep > step.step
-                              ? "bg-emerald-500"
+                              ? "bg-emerald-500 shadow-lg shadow-emerald-500/30"
                               : currentStep === step.step
-                              ? "bg-purple-500 animate-pulse"
+                              ? "bg-purple-500 shadow-lg shadow-purple-500/30"
                               : "bg-white/20"
                           }`}
                         >
                           {currentStep > step.step ? (
-                            <span className="text-white text-sm">✓</span>
+                            <motion.span
+                              className="text-white text-sm font-bold"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                            >
+                              ✓
+                            </motion.span>
+                          ) : currentStep === step.step ? (
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
+                            >
+                              <step.icon className="w-5 h-5 text-white" />
+                            </motion.div>
                           ) : (
-                            <span className="text-white text-sm">
+                            <span className="text-white text-sm font-bold">
                               {step.step}
                             </span>
                           )}
                         </div>
-                        <span className="font-medium">{step.text}</span>
+                        <span className="font-semibold text-lg">
+                          {step.text}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -592,7 +720,7 @@ export default function PromptPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="space-y-6"
+                className="space-y-8 max-w-4xl mx-auto"
               >
                 <PlaylistPreview
                   playlistUrl={playlist.playlistUrl}
